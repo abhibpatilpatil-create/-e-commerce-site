@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURELIA | Maison de Luxe</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        lux: {
+                            bg: '#0a0a0a',
+                            surface: '#141414',
+                            card: '#1a1a1a',
+                            border: '#2a2a2a',
+                            gold: '#d4af37',
+                            goldlight: '#f3e5ab',
+                            golddark: '#aa8c2c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+        }
+        h1, h2, h3, h4, .font-serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        /* Custom scrollbar for luxury feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4af37;
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa8c2c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-border {
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+        .gold-border:hover {
+            border-color: rgba(212, 175, 55, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-lux-bg text-gray-200 antialiased selection:bg-lux-gold selection:text-black">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-lux-surface border-b border-lux-border py-2 px-4 text-center text-xs tracking-widest text-lux-goldlight">
+        COMPLIMENTARY GLOBAL EXPRESS SHIPPING ON ORDERS OVER $500
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header id="header" class="sticky top-0 z-40 bg-lux-bg/90 backdrop-blur-md border-b border-lux-border transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="lg:hidden text-gray-300 hover:text-lux-gold transition-colors p-2">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+
+            <!-- Brand Logo -->
+            <a href="#" onclick="router.navigate('home')" class="text-2xl sm:text-3xl font-serif tracking-widest gold-gradient-text font-semibold">
+                AURELIA
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden lg:flex items-center space-x-8 text-sm tracking-wider uppercase">
+                <a href="#" onclick="router.navigate('home')" class="text-gray-300 hover:text-lux-gold transition-colors py-2 border-b-2 border-transparent hover:border-lux-gold">Home</a>
+                <a href="#" onclick="router.navigate('shop')" class="text-gray-300 hover:text-lux-gold transition-colors py-2 border-b-2 border-transparent hover:border-lux-gold">Collection</a>
+                <a href="#" onclick="router.navigate('shop', {cat: 'Timepieces'})" class="text-gray-300 hover:text-lux-gold transition-colors py-2 border-b-2 border-transparent hover:border-lux-gold">Timepieces</a>
+                <a href="#" onclick="router.navigate('shop', {cat: 'Jewelry'})" class="text-gray-300 hover:text-lux-gold transition-colors py-2 border-b-2 border-transparent hover:border-lux-gold">Jewelry</a>
+                <a href="#" onclick="router.navigate('shop', {cat: 'Leather'})" class="text-gray-300 hover:text-lux-gold transition-colors py-2 border-b-2 border-transparent hover:border-lux-gold">Leather Goods</a>
+            </nav>
+
+            <!-- Action Icons (Search, User, Cart) -->
+            <div class="flex items-center space-x-5 sm:space-x-6">
+                <button onclick="openSearchModal()" class="text-gray-300 hover:text-lux-gold transition-colors p-1" title="Search">
+                    <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                </button>
+                <button onclick="handleUserIconClick()" class="text-gray-300 hover:text-lux-gold transition-colors p-1 relative" title="Account">
+                    <i class="fa-regular fa-user text-lg"></i>
+                    <span id="auth-indicator" class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-lux-gold hidden"></span>
+                </button>
+                <button onclick="openCartDrawer()" class="text-gray-300 hover:text-lux-gold transition-colors p-1 relative" title="Shopping Bag">
+                    <i class="fa-solid fa-bag-shopping text-lg"></i>
+                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-lux-gold text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center transition-transform scale-0">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden transition-opacity opacity-0 lg:hidden">
+        <div class="absolute top-0 left-0 bottom-0 w-4/5 max-w-sm bg-lux-surface border-r border-lux-border p-6 flex flex-col transform -translate-x-full transition-transform duration-300" id="mobile-menu-panel">
+            <div class="flex items-center justify-between pb-6 border-b border-lux-border">
+                <span class="text-xl font-serif tracking-widest gold-gradient-text">AURELIA</span>
+                <button onclick="closeMobileMenu()" class="text-gray-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="flex flex-col space-y-4 pt-6 text-sm tracking-wider uppercase">
+                <a href="#" onclick="router.navigate('home'); closeMobileMenu();" class="py-2 text-gray-200 hover:text-lux-gold">Home</a>
+                <a href="#" onclick="router.navigate('shop'); closeMobileMenu();" class="py-2 text-gray-200 hover:text-lux-gold">Full Collection</a>
+                <a href="#" onclick="router.navigate('shop', {cat: 'Timepieces'}); closeMobileMenu();" class="py-2 text-gray-200 hover:text-lux-gold">Timepieces</a>
+                <a href="#" onclick="router.navigate('shop', {cat: 'Jewelry'}); closeMobileMenu();" class="py-2 text-gray-200 hover:text-lux-gold">Jewelry</a>
+                <a href="#" onclick="router.navigate('shop', {cat: 'Leather'}); closeMobileMenu();" class="py-2 text-gray-200 hover:text-lux-gold">Leather Goods</a>
+                <a href="#" onclick="router.navigate('shop', {cat: 'Fragrance'}); closeMobileMenu();" class="py-2 text-gray-200 hover:text-lux-gold">Fragrance</a>
+            </div>
+            <div class="mt-auto pt-6 border-t border-lux-border">
+                <div id="mobile-auth-section">
+                    <!-- Dynamically populated auth state in mobile -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dynamic View Container -->
+    <main id="app-container" class="min-h-screen">
+        <!-- Views will be dynamically rendered here by router -->
+    </main>
+
+    <!-- Shopping Cart Slide-Over Drawer -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity">
+        <div class="absolute inset-y-0 right-0 max-w-md w-full bg-lux-surface border-l border-lux-border shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300" id="cart-panel">
+            <!-- Header -->
+            <div class="p-6 border-b border-lux-border flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-bag-shopping text-lux-gold"></i>
+                    <h3 class="text-xl font-serif tracking-wide text-white">Your Shopping Bag</h3>
+                    <span id="cart-count-label" class="text-xs px-2 py-0.5 bg-lux-card rounded-full text-lux-gold border border-lux-border">0 items</span>
+                </div>
+                <button onclick="closeCartDrawer()" class="text-gray-400 hover:text-white p-2 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Cart Items Container -->
+            <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-lux-border">
+                <!-- Dynamically populated cart items -->
+            </div>
+
+            <!-- Cart Footer -->
+            <div class="p-6 border-t border-lux-border bg-lux-card/50 space-y-4">
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between text-gray-400">
+                        <span>Subtotal</span>
+                        <span id="cart-subtotal" class="text-white font-medium">$0.00</span>
+                    </div>
+                    <div class="flex justify-between text-gray-400">
+                        <span>Estimated Shipping</span>
+                        <span class="text-lux-gold">Complimentary</span>
+                    </div>
+                    <div class="flex justify-between text-lg font-serif pt-2 border-t border-lux-border text-white">
+                        <span>Total</span>
+                        <span id="cart-total" class="text-lux-gold font-bold">$0.00</span>
+                    </div>
+                </div>
+                <button onclick="proceedToCheckout()" id="checkout-btn" class="w-full py-4 bg-lux-gold hover:bg-lux-goldlight text-black font-semibold uppercase tracking-widest text-xs transition-colors rounded shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                    Proceed to Secure Checkout
+                </button>
+                <div class="text-center">
+                    <span class="text-[11px] text-gray-500 tracking-wider flex items-center justify-center space-x-1">
+                        <i class="fa-solid fa-shield-halved text-lux-gold"></i>
+                        <span>Encrypted & Secured Luxury Transaction</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modal (Login / Register) -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-lux-surface border border-lux-border rounded-lg max-w-md w-full p-8 relative shadow-2xl transform scale-95 transition-transform duration-300" id="auth-modal-content">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="text-center mb-8">
+                <span class="text-xs uppercase tracking-widest text-lux-gold block mb-1">Maison Aurelia</span>
+                <h2 id="auth-modal-title" class="text-3xl font-serif text-white tracking-wide">Client Sign In</h2>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="flex border-b border-lux-border mb-6">
+                <button onclick="switchAuthTab('login')" id="tab-login-btn" class="flex-1 pb-3 text-sm tracking-wider uppercase font-medium border-b-2 border-lux-gold text-lux-gold transition-colors">Sign In</button>
+                <button onclick="switchAuthTab('register')" id="tab-register-btn" class="flex-1 pb-3 text-sm tracking-wider uppercase font-medium border-b-2 border-transparent text-gray-400 hover:text-gray-200 transition-colors">Create Account</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Email Address</label>
+                    <input type="email" id="login-email" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold transition-colors" placeholder="client@aurelia.com">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Password</label>
+                    <input type="password" id="login-password" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold transition-colors" placeholder="••••••••">
+                </div>
+                <button type="submit" class="w-full py-4 bg-lux-gold hover:bg-lux-goldlight text-black font-semibold uppercase tracking-widest text-xs transition-colors rounded mt-2">
+                    Access Account
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" onsubmit="handleRegisterSubmit(event)" class="space-y-4 hidden">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">First Name</label>
+                        <input type="text" id="reg-firstname" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold transition-colors" placeholder="Victoria">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Last Name</label>
+                        <input type="text" id="reg-lastname" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold transition-colors" placeholder="Montague">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Email Address</label>
+                    <input type="email" id="reg-email" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold transition-colors" placeholder="victoria@montague.com">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Create Password</label>
+                    <input type="password" id="reg-password" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold transition-colors" placeholder="••••••••">
+                </div>
+                <button type="submit" class="w-full py-4 bg-lux-gold hover:bg-lux-goldlight text-black font-semibold uppercase tracking-widest text-xs transition-colors rounded mt-2">
+                    Register Client Profile
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="search-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex-col p-4 sm:p-12">
+        <div class="max-w-3xl w-full mx-auto">
+            <div class="flex items-center justify-between pb-4 border-b border-lux-border">
+                <div class="flex items-center space-x-4 flex-1 mr-4">
+                    <i class="fa-solid fa-magnifying-glass text-lux-gold text-xl"></i>
+                    <input type="text" id="search-input" oninput="handleSearchInput(event)" autofocus class="w-full bg-transparent text-xl sm:text-2xl text-white placeholder-gray-600 focus:outline-none font-serif tracking-wide" placeholder="Search timepiece, jewel, fragrance...">
+                </div>
+                <button onclick="closeSearchModal()" class="text-gray-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div id="search-results" class="mt-8 max-h-[70vh] overflow-y-auto space-y-4 pr-2">
+                <p class="text-gray-500 text-sm italic">Begin typing to discover exceptional creations...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- Luxury Footer -->
+    <footer class="bg-lux-surface border-t border-lux-border pt-16 pb-12 mt-20 text-gray-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 pb-16 border-b border-lux-border">
+                <div class="space-y-4">
+                    <span class="text-2xl font-serif tracking-widest gold-gradient-text font-semibold">AURELIA</span>
+                    <p class="text-sm text-gray-400 leading-relaxed">Exquisite masterworks crafted for discerning connoisseurs of uncompromising elegance and timeless sophistication.</p>
+                    <div class="flex space-x-4 pt-2">
+                        <a href="#" class="w-10 h-10 rounded-full bg-lux-card border border-lux-border flex items-center justify-center text-gray-300 hover:text-lux-gold hover:border-lux-gold transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-lux-card border border-lux-border flex items-center justify-center text-gray-300 hover:text-lux-gold hover:border-lux-gold transition-colors"><i class="fa-brands fa-pinterest"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-lux-card border border-lux-border flex items-center justify-center text-gray-300 hover:text-lux-gold hover:border-lux-gold transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-serif text-lg tracking-wider mb-4">The Collections</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" onclick="router.navigate('shop', {cat: 'Timepieces'})" class="hover:text-lux-gold transition-colors">Grand Timepieces</a></li>
+                        <li><a href="#" onclick="router.navigate('shop', {cat: 'Jewelry'})" class="hover:text-lux-gold transition-colors">Haute Joaillerie</a></li>
+                        <li><a href="#" onclick="router.navigate('shop', {cat: 'Leather'})" class="hover:text-lux-gold transition-colors">Exotic Leather Goods</a></li>
+                        <li><a href="#" onclick="router.navigate('shop', {cat: 'Fragrance'})" class="hover:text-lux-gold transition-colors">Private Olfactive</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-serif text-lg tracking-wider mb-4">Client Services</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" onclick="showToast('Connecting to your private concierge...')" class="hover:text-lux-gold transition-colors">Private Concierge</a></li>
+                        <li><a href="#" onclick="showToast('Complimentary worldwide insured shipping enabled')" class="hover:text-lux-gold transition-colors">Worldwide Shipping</a></li>
+                        <li><a href="#" onclick="showToast('Secure bespoke authentication guarantees active')" class="hover:text-lux-gold transition-colors">Bespoke Authentication</a></li>
+                        <li><a href="#" onclick="showToast('Private viewings available in Paris, Geneva, and Tokyo')" class="hover:text-lux-gold transition-colors">Boutique Appointments</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-serif text-lg tracking-wider mb-4">Private Gazette</h4>
+                    <p class="text-sm text-gray-400 mb-4">Subscribe to receive private invitations to limited releases.</p>
+                    <form onsubmit="event.preventDefault(); showToast('Subscribed successfully to Aurelia Gazette.'); this.reset();" class="flex flex-col space-y-2">
+                        <input type="email" required placeholder="Enter your email" class="bg-lux-card border border-lux-border rounded px-4 py-3 text-sm text-white focus:outline-none focus:border-lux-gold">
+                        <button type="submit" class="py-3 bg-lux-gold hover:bg-lux-goldlight text-black font-semibold text-xs uppercase tracking-widest rounded transition-colors">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500">
+                <p>&copy; 2026 AURELIA Maison de Luxe. All Rights Reserved.</p>
+                <div class="flex space-x-6 mt-4 sm:mt-0">
+                    <a href="#" onclick="showToast('Privacy Policy: Confidentiality guaranteed.')" class="hover:text-gray-400">Privacy Policy</a>
+                    <a href="#" onclick="showToast('Terms of Service: All creations guaranteed authentic.')" class="hover:text-gray-400">Terms of Service</a>
+                    <a href="#" onclick="showToast('Cookie Preferences updated.')" class="hover:text-gray-400">Cookie Settings</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const PRODUCTS = [
+            {
+                id: 'aur-001',
+                name: 'Le Chronographe Impérial',
+                category: 'Timepieces',
+                price: 24500,
+                rating: 4.9,
+                reviewsCount: 28,
+                image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80',
+                detailImages: [
+                    'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80'
+                ],
+                description: 'Crafted in 18k rose gold with an openworked skeleton dial, hand-beveled bridges, and an alligator leather strap. A masterpiece of Swiss horology limited to 50 numbered pieces worldwide.',
+                specs: {
+                    'Movement': 'Manual-winding Caliber AURA-9',
+                    'Power Reserve': '72 Hours',
+                    'Case Material': '18k Rose Gold, 41mm',
+                    'Water Resistance': '5 Bar (50 meters)',
+                    'Strap': 'Black Louisiana Alligator Leather'
+                },
+                isFeatured: true,
+                badge: 'Limited Edition'
+            },
+            {
+                id: 'aur-002',
+                name: 'Collier Cascade de Diamants',
+                category: 'Jewelry',
+                price: 48000,
+                rating: 5.0,
+                reviewsCount: 14,
+                image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80',
+                detailImages: [
+                    'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=80'
+                ],
+                description: 'An ethereal waterfall of VVS1 clarity brilliant-cut diamonds totaling 14.5 carats, meticulously set in platinum. Designed to grace the neckline with peerless luminescence.',
+                specs: {
+                    'Metal': 'Solid Platinum 950',
+                    'Gemstones': 'Natural Diamonds (VVS1, Color E)',
+                    'Total Carat Weight': '14.50 ct',
+                    'Clasp': 'Integrated safety lock with hallmark'
+                },
+                isFeatured: true,
+                badge: 'Masterpiece'
+            },
+            {
+                id: 'aur-003',
+                name: 'Sac Malletier Alligator Noir',
+                category: 'Leather',
+                price: 18900,
+                rating: 4.8,
+                reviewsCount: 19,
+                image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
+                detailImages: [
+                    'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80'
+                ],
+                description: 'Handcrafted by master artisans in Paris using matte-finish Niloticus crocodile leather. Finished with custom 24k gold-plated brass hardware and goat-skin lining.',
+                specs: {
+                    'Dimensions': '32cm x 24cm x 15cm',
+                    'Material': 'Niloticus Crocodile Leather',
+                    'Hardware': '24k Gold-Plated Brass',
+                    'Interior': 'Chevre (Goat) Leather Lining'
+                },
+                isFeatured: true,
+                badge: 'Bespoke'
+            },
+            {
+                id: 'aur-004',
+                name: 'Extrait de Parfum "Nuit d\'Or"',
+                category: 'Fragrance',
+                price: 620,
+                rating: 4.7,
+                reviewsCount: 42,
+                image: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=800&q=80',
+                detailImages: [
+                    'https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=800&q=80'
+                ],
+                description: 'An opulent symphony of rare damask rose, golden amber, Madagascar vanilla bean, and agedoud wood. Housed in a hand-blown crystal flacon adorned with a 24k gold collar.',
+                specs: {
+                    'Volume': '100ml / 3.4 fl. oz.',
+                    'Concentration': 'Pure Extrait de Parfum (35%)',
+                    'Primary Notes': 'Damask Rose, Amber, Agarwood (Oud)',
+                    'Bottle': 'Hand-blown crystal with gold leaf'
+                },
+                isFeatured: true,
+                badge: 'Signature'
+            },
+            {
+                id: 'aur-005',
+                name: 'Tourbillon Souverain Royale',
+                category: 'Timepieces',
+                price: 68000,
+                rating: 5.0,
+                reviewsCount: 9,
+                image: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=800&q=80',
+                detailImages: [
+                    'https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=800&q=80'
+                ],
+                description: 'Featuring a 60-second visible tourbillon complication within an 18k white gold case. An extraordinary feat of micro-engineering and aesthetic purity.',
+                specs: {
+                    'Movement': 'In-house Tourbillon Hand-wound',
+                    'Case': '18k White Gold, 42mm',
+                    'Crystal': 'Anti-reflective Sapphire Crystal',
+                    'Strap': 'Hand-stitched Navy Blue Alligator'
+                },
+                isFeatured: false
+            },
+            {
+                id: 'aur-006',
+                name: 'Bague Solitaire Éternité',
+                category: 'Jewelry',
+                price: 15400,
+                rating: 4.9,
+                reviewsCount: 21,
+                image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80',
+                detailImages: [
+                    'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'
+                ],
+                description: 'A magnificent 2.5-carat asscher-cut diamond centered in a hand-crafted platinum band encrusted with micropavé diamonds.',
+                specs: {
+                    'Center Stone': '2.50 Carat Asscher Cut (VS1, Color D)',
+                    'Setting': 'Platinum 4-prong with Pavé Band'
+                },
+                isFeatured: false
+            },
+            {
+                id: 'aur-007',
+                name: 'Porte-Documents Diplomate',
+                category: 'Leather',
+                price: 4900,
+                rating: 4.7,
+                reviewsCount: 16,
+                image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80',
+                detailImages: [
+                    'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80'
+                ],
+                description: 'Sleek briefcase crafted from full-grain French calfskin with custom palladium-finished lock and suede interior compartments.',
+                specs: {
+                    'Dimensions': '40cm x 30cm x 8cm',
+                    'Material': 'French Calfskin',
+                    'Hardware': 'Palladium'
+                },
+                isFeatured: false
+            },
+            {
+                id: 'aur-008',
+                name: 'Bougie Parfumée "Palais de Versailles"',
+                category: 'Fragrance',
+                price: 195,
+                rating: 4.8,
+                reviewsCount: 37,
+                image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80',
+                detailImages: [
+                    'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80'
+                ],
+                description: 'Natural vegetable wax infused with notes of orange blossom, cedarwood, and royal beeswax, poured into a black porcelain vessel with gold stamping.',
+                specs: {
+                    'Weight': '350g',
+                    'Burn Time': 'Approx. 80 hours',
+                    'Vessel': 'Hand-glazed porcelain with 24k gold logo'
+                },
+                isFeatured: false
+            }
+        ];
+
+        let state = {
+            cart: JSON.parse(localStorage.getItem('aurelia_cart')) || [],
+            user: JSON.parse(localStorage.getItem('aurelia_user')) || null,
+            currentView: 'home',
+            viewParams: {},
+            orders: JSON.parse(localStorage.getItem('aurelia_orders')) || []
+        };
+
+        function saveState() {
+            localStorage.setItem('aurelia_cart', JSON.stringify(state.cart));
+            localStorage.setItem('aurelia_user', JSON.stringify(state.user));
+            localStorage.setItem('aurelia_orders', JSON.stringify(state.orders));
+            updateCartUI();
+            updateAuthUI();
+        }
+
+        const router = {
+            navigate: function(view, params = {}) {
+                state.currentView = view;
+                state.viewParams = params;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                renderCurrentView();
+            }
+        };
+
+        function renderCurrentView() {
+            const container = document.getElementById('app-container');
+            container.innerHTML = '';
+
+            switch(state.currentView) {
+                case 'home':
+                    container.innerHTML = renderHomeView();
+                    break;
+                case 'shop':
+                    container.innerHTML = renderShopView(state.viewParams);
+                    initShopInteractions();
+                    break;
+                case 'product':
+                    container.innerHTML = renderProductView(state.viewParams.id);
+                    break;
+                case 'checkout':
+                    container.innerHTML = renderCheckoutView();
+                    break;
+                case 'account':
+                    container.innerHTML = renderAccountView();
+                    break;
+                default:
+                    container.innerHTML = renderHomeView();
+            }
+        }
+
+        function renderHomeView() {
+            const featuredProducts = PRODUCTS.filter(p => p.isFeatured);
+            return `
+                <!-- Hero Section -->
+                <section class="relative h-[85vh] flex items-center justify-center overflow-hidden">
+                    <div class="absolute inset-0 z-0">
+                        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1920&q=85" alt="Luxury Hero" class="w-full h-full object-cover filter brightness-50 scale-105 animate-pulse duration-[10000ms]">
+                        <div class="absolute inset-0 bg-gradient-to-t from-lux-bg via-lux-bg/40 to-transparent"></div>
+                    </div>
+                    <div class="relative z-10 text-center max-w-4xl mx-auto px-4 space-y-6">
+                        <span class="text-xs sm:text-sm uppercase tracking-[0.3em] text-lux-gold font-medium block">Haute Horlogerie & Joaillerie</span>
+                        <h1 class="text-5xl sm:text-7xl lg:text-8xl font-serif text-white tracking-wide">The Art of Timeless Elegance</h1>
+                        <p class="text-gray-300 max-w-xl mx-auto text-sm sm:text-base font-light tracking-wide leading-relaxed">Discover masterpieces of uncompromising craftsmanship, curated exclusively for those who demand the extraordinary.</p>
+                        <div class="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <button onclick="router.navigate('shop')" class="w-full sm:w-auto px-8 py-4 bg-lux-gold hover:bg-lux-goldlight text-black font-semibold text-xs uppercase tracking-[0.2em] transition-all rounded shadow-xl">
+                                Explore Collection
+                            </button>
+                            <button onclick="router.navigate('shop', {cat: 'Timepieces'})" class="w-full sm:w-auto px-8 py-4 bg-transparent hover:bg-white/10 text-white border border-lux-border hover:border-lux-gold font-semibold text-xs uppercase tracking-[0.2em] transition-all rounded">
+                                View Timepieces
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Brand Pillars Section -->
+                <section class="py-20 border-b border-lux-border bg-lux-surface/50">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+                        <div class="space-y-3 p-6 rounded bg-lux-card/40 border border-lux-border/50">
+                            <i class="fa-solid fa-gem text-3xl text-lux-gold mb-2"></i>
+                            <h3 class="text-xl font-serif text-white tracking-wide">Bespoke Masterpieces</h3>
+                            <p class="text-sm text-gray-400">Each creation is individually numbered and crafted by master artisans with decades of heritage.</p>
+                        </div>
+                        <div class="space-y-3 p-6 rounded bg-lux-card/40 border border-lux-border/50">
+                            <i class="fa-solid fa-plane-up text-3xl text-lux-gold mb-2"></i>
+                            <h3 class="text-xl font-serif text-white tracking-wide">Global Insured Delivery</h3>
+                            <p class="text-sm text-gray-400">Complimentary armored courier shipping worldwide with signature verification upon delivery.</p>
+                        </div>
+                        <div class="space-y-3 p-6 rounded bg-lux-card/40 border border-lux-border/50">
+                            <i class="fa-solid fa-certificate text-3xl text-lux-gold mb-2"></i>
+                            <h3 class="text-xl font-serif text-white tracking-wide">Lifetime Guarantee</h3>
+                            <p class="text-sm text-gray-400">Unconditional certification of authenticity and comprehensive lifetime maintenance support.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Featured Masterpieces Section -->
+                <section class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                        <div>
+                            <span class="text-xs uppercase tracking-[0.25em] text-lux-gold block mb-2">Curated Selection</span>
+                            <h2 class="text-3xl sm:text-4xl font-serif text-white">Featured Masterworks</h2>
+                        </div>
+                        <button onclick="router.navigate('shop')" class="mt-4 md:mt-0 text-xs uppercase tracking-widest text-lux-gold hover:text-lux-goldlight flex items-center space-x-2 transition-colors group">
+                            <span>View All Creations</span>
+                            <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        ${featuredProducts.map(p => renderProductCard(p)).join('')}
+                    </div>
+                </section>
+
+                <!-- Editorial Banner -->
+                <section class="py-20 bg-lux-surface relative overflow-hidden">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div class="space-y-6">
+                            <span class="text-xs uppercase tracking-[0.3em] text-lux-gold">Olfactive Odyssey</span>
+                            <h2 class="text-4xl sm:text-5xl font-serif text-white leading-tight">The Private Fragrance Atelier</h2>
+                            <p class="text-gray-300 text-sm sm:text-base leading-relaxed">Immerse your senses in rare botanical essences harvested from secluded European gardens and ancient Middle Eastern groves. Each flacon is an olfactory journey into pure refinement.</p>
+                            <button onclick="router.navigate('shop', {cat: 'Fragrance'})" class="px-8 py-4 bg-lux-gold hover:bg-lux-goldlight text-black font-semibold text-xs uppercase tracking-[0.2em] transition-colors rounded">
+                                Discover Fragrances
+                            </button>
+                        </div>
+                        <div class="relative h-96 rounded-lg overflow-hidden border border-lux-border">
+                            <img src="https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=1000&q=85" alt="Fragrance Atelier" class="w-full h-full object-cover filter hover:scale-105 transition-transform duration-700">
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderProductCard(product) {
+            return `
+                group bg-lux-card border border-lux-border rounded-lg overflow-hidden flex flex-col hover:border-lux-gold transition-all duration-300 shadow-xl
+            `.trim() && `
+                <div class="bg-lux-card border border-lux-border rounded-lg overflow-hidden flex flex-col hover:border-lux-gold transition-all duration-300 shadow-xl group">
+                    <div class="relative h-80 overflow-hidden bg-black/40 cursor-pointer" onclick="router.navigate('product', {id: '${product.id}'})">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        ${product.badge ? `<span class="absolute top-3 left-3 bg-lux-gold text-black text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">${product.badge}</span>` : ''}
+                        <button onclick="event.stopPropagation(); quickAdd('${product.id}')" class="absolute bottom-3 right-3 w-10 h-10 bg-lux-surface/90 hover:bg-lux-gold hover:text-black text-white rounded-full flex items-center justify-center backdrop-blur-md transition-colors shadow-lg" title="Quick Add to Bag">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[11px] uppercase tracking-widest text-lux-gold block mb-1">${product.category}</span>
+                            <h3 onclick="router.navigate('product', {id: '${product.id}'})" class="text-xl font-serif text-white hover:text-lux-gold cursor-pointer transition-colors line-clamp-1">${product.name}</h3>
+                        </div>
+                        <div class="pt-4 mt-4 border-t border-lux-border/60 flex items-center justify-between">
+                            <span class="text-lg font-serif text-lux-gold font-semibold">$${product.price.toLocaleString()}</span>
+                            <div class="flex items-center space-x-1 text-xs text-gray-400">
+                                <i class="fa-solid fa-star text-lux-gold text-[10px]"></i>
+                                <span>${product.rating}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderShopView(params = {}) {
+            const activeCategory = params.cat || 'All';
+            const categories = ['All', 'Timepieces', 'Jewelry', 'Leather', 'Fragrance'];
+            
+            return `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                    <!-- Shop Header -->
+                    <div class="text-center max-w-2xl mx-auto mb-12 space-y-3">
+                        <span class="text-xs uppercase tracking-[0.3em] text-lux-gold">Exquisite Catalog</span>
+                        <h1 class="text-4xl sm:text-5xl font-serif text-white">The Aurelia Portfolio</h1>
+                        <p class="text-gray-400 text-sm">Browse our complete array of rare horology, fine jewels, and bespoke accessories.</p>
+                    </div>
+
+                    <!-- Category Filter Tabs -->
+                    <div class="flex flex-wrap items-center justify-center gap-3 mb-12">
+                        ${categories.map(cat => `
+                            <button onclick="filterShopCategory('${cat}')" class="px-6 py-2.5 rounded-full text-xs uppercase tracking-widest transition-all ${activeCategory === cat ? 'bg-lux-gold text-black font-semibold shadow-lg' : 'bg-lux-surface border border-lux-border text-gray-300 hover:border-lux-gold'}">
+                                ${cat}
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <!-- Product Grid -->
+                    <div id="shop-product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        ${getFilteredProducts(activeCategory).map(p => renderProductCard(p)).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function getFilteredProducts(category) {
+            if (!category || category === 'All') return PRODUCTS;
+            return PRODUCTS.filter(p => p.category === category);
+        }
+
+        function filterShopCategory(category) {
+            router.navigate('shop', { cat: category });
+        }
+
+        function initShopInteractions() {
+            // Additional shop interactivity if needed
+        }
+
+        function renderProductView(productId) {
+            const product = PRODUCTS.find(p => p.id === productId) || PRODUCTS[0];
+            
+            return `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                    <!-- Breadcrumbs -->
+                    <div class="flex items-center space-x-2 text-xs uppercase tracking-wider text-gray-400 mb-8">
+                        <a href="#" onclick="router.navigate('home')" class="hover:text-lux-gold">Home</a>
+                        <span>/</span>
+                        <a href="#" onclick="router.navigate('shop', {cat: '${product.category}'})" class="hover:text-lux-gold">${product.category}</a>
+                        <span>/</span>
+                        <span class="text-white">${product.name}</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+                        <!-- Image Gallery -->
+                        <div class="space-y-4">
+                            <div class="bg-lux-card border border-lux-border rounded-lg overflow-hidden h-[450px] sm:h-[550px]">
+                                <img id="main-product-img" src="${product.detailImages[0]}" alt="${product.name}" class="w-full h-full object-cover">
+                            </div>
+                            ${product.detailImages.length > 1 ? `
+                                <div class="grid grid-cols-3 gap-4">
+                                    ${product.detailImages.map((img, idx) => `
+                                        <div onclick="document.getElementById('main-product-img').src='${img}'" class="h-28 rounded-lg overflow-hidden border border-lux-border cursor-pointer hover:border-lux-gold transition-colors">
+                                            <img src="${img}" alt="" class="w-full h-full object-cover">
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Product Info & Actions -->
+                        <div class="space-y-6">
+                            <div>
+                                <span class="text-xs uppercase tracking-[0.25em] text-lux-gold block mb-2">${product.category}</span>
+                                <h1 class="text-3xl sm:text-5xl font-serif text-white mb-4">${product.name}</h1>
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-3xl font-serif text-lux-gold font-bold">$${product.price.toLocaleString()}</span>
+                                    <div class="flex items-center space-x-1 text-sm text-gray-300 bg-lux-surface px-3 py-1 rounded-full border border-lux-border">
+                                        <i class="fa-solid fa-star text-lux-gold text-xs"></i>
+                                        <span>${product.rating}</span>
+                                        <span class="text-gray-500">(${product.reviewsCount} reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="text-gray-300 text-sm sm:text-base leading-relaxed border-t border-b border-lux-border py-6">${product.description}</p>
+
+                            <!-- Specifications Table -->
+                            <div>
+                                <h3 class="text-sm font-semibold uppercase tracking-widest text-white mb-3">Specifications & Details</h3>
+                                <div class="bg-lux-surface border border-lux-border rounded-lg p-4 space-y-2 text-sm">
+                                    ${Object.entries(product.specs).map(([key, val]) => `
+                                        <div class="flex justify-between py-1 border-b border-lux-border/40 last:border-0">
+                                            <span class="text-gray-400">${key}</span>
+                                            <span class="text-white font-medium">${val}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Quantity & Add to Cart -->
+                            <div class="space-y-4 pt-4">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex items-center border border-lux-border rounded bg-lux-surface">
+                                        <button onclick="adjustDetailQty(-1)" class="px-4 py-3 text-gray-300 hover:text-white transition-colors">-</button>
+                                        <span id="detail-qty" class="px-4 py-3 text-white font-medium">1</span>
+                                        <button onclick="adjustDetailQty(1)" class="px-4 py-3 text-gray-300 hover:text-white transition-colors">+</button>
+                                    </div>
+                                    <button onclick="addProductToCartFromDetail('${product.id}')" class="flex-1 py-4 bg-lux-gold hover:bg-lux-goldlight text-black font-semibold uppercase tracking-widest text-xs transition-colors rounded shadow-xl flex items-center justify-center space-x-2">
+                                        <i class="fa-solid fa-bag-shopping"></i>
+                                        <span>Add to Shopping Bag</span>
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 text-xs text-gray-400 pt-2">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fa-solid fa-truck text-lux-gold"></i>
+                                        <span>Complimentary Express Courier</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fa-solid fa-rotate-left text-lux-gold"></i>
+                                        <span>30-Day Private Returns</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        let detailQty = 1;
+        function adjustDetailQty(amount) {
+            detailQty = Math.max(1, detailQty + amount);
+            const el = document.getElementById('detail-qty');
+            if (el) el.innerText = detailQty;
+        }
+
+        function addProductToCartFromDetail(productId) {
+            addToCart(productId, detailQty);
+            detailQty = 1;
+            const el = document.getElementById('detail-qty');
+            if (el) el.innerText = 1;
+        }
+
+        function addToCart(productId, qty = 1) {
+            const product = PRODUCTS.find(p => p.id === productId);
+            if (!product) return;
+
+            const existing = state.cart.find(item => item.id === productId);
+            if (existing) {
+                existing.quantity += qty;
+            } else {
+                state.cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    category: product.category,
+                    quantity: qty
+                });
+            }
+
+            saveState();
+            openCartDrawer();
+            showToast(`Added ${product.name} to your shopping bag.`);
+        }
+
+        function quickAdd(productId) {
+            addToCart(productId, 1);
+        }
+
+        function updateCartItemQty(productId, delta) {
+            const item = state.cart.find(i => i.id === productId);
+            if (!item) return;
+            item.quantity += delta;
+            if (item.quantity <= 0) {
+                state.cart = state.cart.filter(i => i.id !== productId);
+            }
+            saveState();
+            renderCartItems();
+        }
+
+        function removeCartItem(productId) {
+            state.cart = state.cart.filter(i => i.id !== productId);
+            saveState();
+            renderCartItems();
+            showToast('Item removed from bag.');
+        }
+
+        function updateCartUI() {
+            const totalCount = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+            const badge = document.getElementById('cart-badge');
+            if (badge) {
+                badge.innerText = totalCount;
+                if (totalCount > 0) {
+                    badge.classList.remove('scale-0');
+                    badge.classList.add('scale-100');
+                } else {
+                    badge.classList.remove('scale-100');
+                    badge.classList.add('scale-0');
+                }
+            }
+
+            const countLabel = document.getElementById('cart-count-label');
+            if (countLabel) countLabel.innerText = `${totalCount} item${totalCount === 1 ? '' : 's'}`;
+
+            const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const totalEl = document.getElementById('cart-total');
+            if (subtotalEl) subtotalEl.innerText = `$${subtotal.toLocaleString()}`;
+            if (totalEl) totalEl.innerText = `$${subtotal.toLocaleString()}`;
+
+            renderCartItems();
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items-container');
+            if (!container) return;
+
+            if (state.cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 space-y-4">
+                        <i class="fa-regular fa-bag-shopping text-4xl text-gray-600"></i>
+                        <p class="text-gray-400 text-sm">Your shopping bag is currently empty.</p>
+                        <button onclick="closeCartDrawer(); router.navigate('shop');" class="px-6 py-3 bg-lux-gold text-black text-xs uppercase tracking-widest font-semibold rounded">Explore Collection</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = state.cart.map(item => `
+                <div class="flex items-center space-x-4 pt-4 first:pt-0">
+                    <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded border border-lux-border">
+                    <div class="flex-1">
+                        <span class="text-[10px] uppercase tracking-widest text-lux-gold block">${item.category}</span>
+                        <h4 class="text-white font-serif text-base line-clamp-1">${item.name}</h4>
+                        <div class="text-lux-gold font-medium text-sm mt-1">$${item.price.toLocaleString()}</div>
+                        <div class="flex items-center justify-between mt-2">
+                            <div class="flex items-center border border-lux-border rounded bg-lux-card text-xs">
+                                <button onclick="updateCartItemQty('${item.id}', -1)" class="px-2.5 py-1 text-gray-300 hover:text-white">-</button>
+                                <span class="px-2.5 py-1 text-white">${item.quantity}</span>
+                                <button onclick="updateCartItemQty('${item.id}', 1)" class="px-2.5 py-1 text-gray-300 hover:text-white">+</button>
+                            </div>
+                            <button onclick="removeCartItem('${item.id}')" class="text-gray-500 hover:text-red-400 text-xs transition-colors">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openCartDrawer() {
+            const drawer = document.getElementById('cart-drawer');
+            const panel = document.getElementById('cart-panel');
+            if (drawer && panel) {
+                drawer.classList.remove('hidden');
+                setTimeout(() => {
+                    drawer.classList.remove('opacity-0');
+                    panel.classList.remove('translate-x-full');
+                }, 10);
+                renderCartItems();
+            }
+        }
+
+        function closeCartDrawer() {
+            const drawer = document.getElementById('cart-drawer');
+            const panel = document.getElementById('cart-panel');
+            if (drawer && panel) {
+                drawer.classList.add('opacity-0');
+                panel.classList.add('translate-x-full');
+                setTimeout(() => {
+                    drawer.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        function proceedToCheckout() {
+            if (state.cart.length === 0) {
+                showToast('Your shopping bag is empty.');
+                return;
+            }
+            closeCartDrawer();
+            router.navigate('checkout');
+        }
+
+        function renderCheckoutView() {
+            const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            return `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                    <div class="text-center max-w-2xl mx-auto mb-12 space-y-3">
+                        <span class="text-xs uppercase tracking-[0.3em] text-lux-gold">Secure Transaction</span>
+                        <h1 class="text-4xl font-serif text-white">Checkout & Concierge Delivery</h1>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                        <!-- Checkout Form -->
+                        <div class="lg:col-span-2 space-y-8">
+                            <form id="checkout-form" onsubmit="handleOrderSubmission(event)" class="space-y-8">
+                                <!-- Shipping Information -->
+                                <div class="bg-lux-surface border border-lux-border rounded-lg p-6 sm:p-8 space-y-6">
+                                    <h3 class="text-xl font-serif text-white flex items-center space-x-3 border-b border-lux-border pb-4">
+                                        <i class="fa-solid fa-truck-fast text-lux-gold"></i>
+                                        <span>1. Shipping Destination</span>
+                                    </h3>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">First Name</label>
+                                            <input type="text" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold" value="${state.user ? state.user.firstname : ''}">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Last Name</label>
+                                            <input type="text" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold" value="${state.user ? state.user.lastname : ''}">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Street Address</label>
+                                        <input type="text" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold" placeholder="75008 Champs-Élysées">
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4">
+                                        <div>
+                                            <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">City</label>
+                                            <input type="text" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold" placeholder="Paris">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Postal Code</label>
+                                            <input type="text" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold" placeholder="75008">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Country</label>
+                                            <input type="text" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold" placeholder="France">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Method -->
+                                <div class="bg-lux-surface border border-lux-border rounded-lg p-6 sm:p-8 space-y-6">
+                                    <h3 class="text-xl font-serif text-white flex items-center space-x-3 border-b border-lux-border pb-4">
+                                        <i class="fa-solid fa-credit-card text-lux-gold"></i>
+                                        <span>2. Secure Payment</span>
+                                    </h3>
+                                    <div>
+                                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Card Number</label>
+                                        <input type="text" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold" placeholder="•••• •••• •••• ••••">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Expiration Date</label>
+                                            <input type="text" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold" placeholder="MM / YY">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">CVV Security Code</label>
+                                            <input type="password" required class="w-full bg-lux-card border border-lux-border rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-lux-gold" placeholder="•••">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="w-full py-5 bg-lux-gold hover:bg-lux-goldlight text-black font-semibold uppercase tracking-[0.2em] text-sm transition-colors rounded shadow-2xl">
+                                    Authorize & Complete Order ($${subtotal.toLocaleString()})
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Order Summary Sidebar -->
+                        <div>
+                            <div class="bg-lux-surface border border-lux-border rounded-lg p-6 space-y-6 sticky top-28">
+                                <h3 class="text-xl font-serif text-white border-b border-lux-border pb-4">Order Summary</h3>
+                                <div class="space-y-4 max-h-80 overflow-y-auto divide-y divide-lux-border/50">
+                                    ${state.cart.map(item => `
+                                        <div class="flex items-center space-x-3 pt-3 first:pt-0">
+                                            <img src="${item.image}" alt="" class="w-14 h-14 object-cover rounded border border-lux-border">
+                                            <div class="flex-1">
+                                                <h4 class="text-white text-sm font-serif line-clamp-1">${item.name}</h4>
+                                                <span class="text-xs text-gray-400">Qty: ${item.quantity}</span>
+                                            </div>
+                                            <span class="text-lux-gold text-sm font-medium">$${(item.price * item.quantity).toLocaleString()}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <div class="border-t border-lux-border pt-4 space-y-2 text-sm">
+                                    <div class="flex justify-between text-gray-400">
+                                        <span>Subtotal</span>
+                                        <span class="text-white">$${subtotal.toLocaleString()}</span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-400">
+                                        <span>Insured Courier Shipping</span>
+                                        <span class="text-lux-gold font-medium">Complimentary</span>
+                                    </div>
+                                    <div class="flex justify-between text-lg font-serif pt-2 border-t border-lux-border text-white">
+                                        <span>Total Amount</span>
+                                        <span class="text-lux-gold font-bold">$${subtotal.toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleOrderSubmission(event) {
+            event.preventDefault();
+            const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            const newOrder = {
+                id: 'AUR-' + Math.floor(100000 + Math.random() * 900000),
+                date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+                items: [...state.cart],
+                total: subtotal,
+                status: 'Confirmed & Preparing'
+            };
+
+            state.orders.unshift(newOrder);
+            state.cart = [];
+            saveState();
+
+            // Show Success Confirmation View
+            const container = document.getElementById('app-container');
+            container.innerHTML = `
+                <div class="max-w-3xl mx-auto px-4 py-24 text-center space-y-6">
+                    <div class="w-20 h-20 bg-lux-gold/20 border border-lux-gold rounded-full flex items-center justify-center mx-auto text-lux-gold text-3xl">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <span class="text-xs uppercase tracking-[0.3em] text-lux-gold">Order Authenticated</span>
+                    <h1 class="text-4xl sm:text-5xl font-serif text-white">Thank You for Your Order</h1>
+                    <p class="text-gray-300 max-w-lg mx-auto text-sm leading-relaxed">Your order <span class="text-lux-gold font-medium">${newOrder.id}</span> has been securely transmitted to our Parisian workshop. A private concierge will contact you shortly.</p>
+                    <div class="pt-6 flex justify-center space-x-4">
+                        <button onclick="router.navigate('account')" class="px-8 py-4 bg-lux-gold hover:bg-lux-goldlight text-black font-semibold text-xs uppercase tracking-widest rounded transition-colors">
+                            View Order in Profile
+                        </button>
+                        <button onclick="router.navigate('home')" class="px-8 py-4 bg-lux-surface border border-lux-border hover:border-lux-gold text-white font-semibold text-xs uppercase tracking-widest rounded transition-colors">
+                            Return to Home
+                        </button>
+                    </div>
+                </div>
+            `;
+            showToast('Order successfully processed!');
+        }
+
+        function handleUserIconClick() {
+            if (state.user) {
+                router.navigate('account');
+            } else {
+                openAuthModal('login');
+            }
+        }
+
+        function openAuthModal(tab = 'login') {
+            const modal = document.getElementById('auth-modal');
+            const content = document.getElementById('auth-modal-content');
+            if (modal && content) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    content.classList.remove('scale-95');
+                    content.classList.add('scale-100');
+                }, 10);
+                switchAuthTab(tab);
+            }
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            const content = document.getElementById('auth-modal-content');
+            if (modal && content) {
+                content.classList.remove('scale-100');
+                content.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.remove('flex');
+                    modal.classList.add('hidden');
+                }, 200);
+            }
+        }
+
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const loginBtn = document.getElementById('tab-login-btn');
+            const registerBtn = document.getElementById('tab-register-btn');
+            const title = document.getElementById('auth-modal-title');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                loginBtn.className = "flex-1 pb-3 text-sm tracking-wider uppercase font-medium border-b-2 border-lux-gold text-lux-gold transition-colors";
+                registerBtn.className = "flex-1 pb-3 text-sm tracking-wider uppercase font-medium border-b-2 border-transparent text-gray-400 hover:text-gray-200 transition-colors";
+                title.innerText = "Client Sign In";
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                registerBtn.className = "flex-1 pb-3 text-sm tracking-wider uppercase font-medium border-b-2 border-lux-gold text-lux-gold transition-colors";
+                loginBtn.className = "flex-1 pb-3 text-sm tracking-wider uppercase font-medium border-b-2 border-transparent text-gray-400 hover:text-gray-200 transition-colors";
+                title.innerText = "Create Client Account";
+            }
+        }
+
+        function handleLoginSubmit(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            state.user = {
+                firstname: email.split('@')[0] || 'Client',
+                lastname: 'Connoisseur',
+                email: email
+            };
+            saveState();
+            closeAuthModal();
+            showToast(`Welcome back, ${state.user.firstname}.`);
+            router.navigate('account');
+        }
+
+        function handleRegisterSubmit(event) {
+            event.preventDefault();
+            const firstname = document.getElementById('reg-firstname').value;
+            const lastname = document.getElementById('reg-lastname').value;
+            const email = document.getElementById('reg-email').value;
+            
+            state.user = { firstname, lastname, email };
+            saveState();
+            closeAuthModal();
+            showToast(`Account successfully created for ${firstname}.`);
+            router.navigate('account');
+        }
+
+        function logoutUser() {
+            state.user = null;
+            saveState();
+            router.navigate('home');
+            showToast('Signed out of client profile.');
+        }
+
+        function updateAuthUI() {
+            const indicator = document.getElementById('auth-indicator');
+            if (indicator) {
+                if (state.user) {
+                    indicator.classList.remove('hidden');
+                } else {
+                    indicator.classList.add('hidden');
+                }
+            }
+
+            const mobileAuth = document.getElementById('mobile-auth-section');
+            if (mobileAuth) {
+                if (state.user) {
+                    mobileAuth.innerHTML = `
+                        <div class="space-y-3">
+                            <p class="text-xs text-gray-400">Signed in as <span class="text-white">${state.user.firstname} ${state.user.lastname}</span></p>
+                            <button onclick="router.navigate('account'); closeMobileMenu();" class="w-full py-2 bg-lux-card border border-lux-border text-white text-xs uppercase tracking-widest rounded">Profile & Orders</button>
+                            <button onclick="logoutUser(); closeMobileMenu();" class="w-full py-2 bg-red-950/40 border border-red-900 text-red-300 text-xs uppercase tracking-widest rounded">Sign Out</button>
+                        </div>
+                    `;
+                } else {
+                    mobileAuth.innerHTML = `
+                        <button onclick="openAuthModal('login'); closeMobileMenu();" class="w-full py-3 bg-lux-gold text-black font-semibold text-xs uppercase tracking-widest rounded">Sign In / Register</button>
+                    `;
+                }
+            }
+        }
+
+        function renderAccountView() {
+            if (!state.user) {
+                setTimeout(() => openAuthModal('login'), 100);
+                return `<div class="py-24 text-center text-gray-400">Redirecting to client authentication...</div>`;
+            }
+
+            return `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b border-lux-border pb-8">
+                        <div>
+                            <span class="text-xs uppercase tracking-[0.3em] text-lux-gold block mb-2">Client Profile</span>
+                            <h1 class="text-4xl font-serif text-white">Welcome, ${state.user.firstname} ${state.user.lastname}</h1>
+                            <p class="text-gray-400 text-sm mt-1">${state.user.email}</p>
+                        </div>
+                        <button onclick="logoutUser()" class="mt-4 md:mt-0 px-6 py-3 bg-lux-surface border border-lux-border hover:border-red-500 text-gray-300 hover:text-red-400 text-xs uppercase tracking-widest rounded transition-colors">
+                            Sign Out
+                        </button>
+                    </div>
+
+                    <!-- Orders Section -->
+                    <div class="space-y-6">
+                        <h2 class="text-2xl font-serif text-white">Your Order History</h2>
+                        ${state.orders.length === 0 ? `
+                            <div class="bg-lux-surface border border-lux-border rounded-lg p-12 text-center text-gray-400">
+                                <p class="text-sm">You have no active orders in your dossier.</p>
+                                <button onclick="router.navigate('shop')" class="mt-4 px-6 py-3 bg-lux-gold text-black text-xs uppercase tracking-widest font-semibold rounded">Discover Masterpieces</button>
+                            </div>
+                        ` : `
+                            <div class="space-y-6">
+                                ${state.orders.map(order => `
+                                    <div class="bg-lux-surface border border-lux-border rounded-lg p-6 sm:p-8 space-y-6">
+                                        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-lux-border pb-4 gap-2">
+                                            <div>
+                                                <span class="text-xs text-lux-gold uppercase tracking-wider font-medium">${order.id}</span>
+                                                <h3 class="text-white font-serif text-lg">Placed on ${order.date}</h3>
+                                            </div>
+                                            <div class="flex items-center space-x-3">
+                                                <span class="px-3 py-1 bg-lux-gold/10 text-lux-gold border border-lux-gold/30 rounded-full text-xs">${order.status}</span>
+                                                <span class="text-white font-serif font-bold text-lg">$${order.total.toLocaleString()}</span>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                            ${order.items.map(item => `
+                                                <div class="flex items-center space-x-3 bg-lux-card p-3 rounded border border-lux-border/50">
+                                                    <img src="${item.image}" alt="" class="w-12 h-12 object-cover rounded">
+                                                    <div class="flex-1 overflow-hidden">
+                                                        <h4 class="text-white text-xs font-serif line-clamp-1">${item.name}</h4>
+                                                        <span class="text-[10px] text-gray-400">Qty: ${item.quantity} &bull; $${item.price.toLocaleString()}</span>
+                                                    </div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        function openSearchModal() {
+            const modal = document.getElementById('search-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => document.getElementById('search-input').focus(), 100);
+            }
+        }
+
+        function closeSearchModal() {
+            const modal = document.getElementById('search-modal');
+            if (modal) {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }
+        }
+
+        function handleSearchInput(event) {
+            const query = event.target.value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('search-results');
+            if (!resultsContainer) return;
+
+            if (query.length === 0) {
+                resultsContainer.innerHTML = `<p class="text-gray-500 text-sm italic">Begin typing to discover exceptional creations...</p>`;
+                return;
+            }
+
+            const matched = PRODUCTS.filter(p => 
+                p.name.toLowerCase().includes(query) || 
+                p.category.toLowerCase().includes(query) || 
+                p.description.toLowerCase().includes(query)
+            );
+
+            if (matched.length === 0) {
+                resultsContainer.innerHTML = `<p class="text-gray-400 text-sm">No exquisite masterworks found matching "${query}".</p>`;
+                return;
+            }
+
+            resultsContainer.innerHTML = matched.map(p => `
+                <div onclick="closeSearchModal(); router.navigate('product', {id: '${p.id}'})" class="flex items-center space-x-4 bg-lux-surface hover:bg-lux-card border border-lux-border p-4 rounded-lg cursor-pointer transition-colors">
+                    <img src="${p.image}" alt="" class="w-16 h-16 object-cover rounded">
+                    <div class="flex-1">
+                        <span class="text-[10px] uppercase tracking-widest text-lux-gold">${p.category}</span>
+                        <h4 class="text-white font-serif text-lg">${p.name}</h4>
+                        <span class="text-lux-gold font-medium text-sm">$${p.price.toLocaleString()}</span>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-gray-500"></i>
+                </div>
+            `).join('');
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = "bg-lux-surface border border-lux-gold text-white px-6 py-3 rounded-lg shadow-2xl flex items-center space-x-3 transform translate-y-4 opacity-0 transition-all duration-300 pointer-events-auto text-sm";
+            toast.innerHTML = `
+                <i class="fa-solid fa-gem text-lux-gold"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-4', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+
+        if (mobileMenuBtn && mobileMenu && mobileMenuPanel) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.remove('hidden');
+                setTimeout(() => {
+                    mobileMenu.classList.remove('opacity-0');
+                    mobileMenuPanel.classList.remove('-translate-x-full');
+                }, 10);
+            });
+        }
+
+        function closeMobileMenu() {
+            if (mobileMenu && mobileMenuPanel) {
+                mobileMenu.classList.add('opacity-0');
+                mobileMenuPanel.classList.add('-translate-x-full');
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Initialize App on Load
+        window.onload = function() {
+            updateCartUI();
+            updateAuthUI();
+            renderCurrentView();
+        }
+    </script>
+</body>
+</html>
